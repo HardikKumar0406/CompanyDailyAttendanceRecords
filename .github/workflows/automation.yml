@@ -27,11 +27,21 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Create writable temp directory for Excel export
-        run: mkdir -p ${{ github.workspace }}/tempExcel
+      - name: Set up writable directory for Excel export
+        run: |
+          mkdir -p ${{ github.workspace }}/tempExcel
+          chmod -R 777 ${{ github.workspace }}/tempExcel
+          echo "✅ tempExcel directory created with full write permission"
 
-      - name: Clean and compile
+      - name: Clean and compile project
         run: mvn clean compile
 
       - name: Run Selenium Tests
         run: mvn test
+
+      - name: Archive Excel report (optional)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Attendance-Excel-Reports
+          path: tempExcel/
