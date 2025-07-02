@@ -1,9 +1,0 @@
-<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
-<suite name="Attendance Test Suite" parallel="none">
-    <test name="LoginTests">
-        <classes>
-            <class name="attendanceTests.LoginTests"/>
-            <class name="attendanceTests.AccessControlTests"/>
-        </classes>
-    </test>
-</suite>

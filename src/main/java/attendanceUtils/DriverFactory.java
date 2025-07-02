@@ -22,6 +22,7 @@ public class DriverFactory {
                 options.addArguments("--headless=new");
                 // ✅ Use a unique temporary user data directory to avoid session conflict
                 options.addArguments("--user-data-dir=/tmp/chrome-" + System.currentTimeMillis());
+                options.addArguments("--window-size=1920,1080");
             }
 
 
