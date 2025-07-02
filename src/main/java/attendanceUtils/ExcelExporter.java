@@ -37,6 +37,9 @@ public class ExcelExporter {
     }
 
     public String writeToExcel(List<AttendanceRecord> records, LocalDate reportDate) {
+    	System.out.println("🌐 CI Environment? " + System.getenv("CI"));
+    	System.out.println("📁 Current working directory: " + System.getProperty("user.dir"));
+
         Collections.reverse(records);
 
         String[] columns = {"Sr. No.", "First Name", "Last Name", "Access Time", "Check Type", "Attendance Status"};
@@ -163,9 +166,12 @@ public class ExcelExporter {
             sheet.autoSizeColumn(i);
         }
 
-        // 🔐 Output directory logic
+        // Output directory logic
         String basePath;
-        if (System.getenv("CI") != null) {
+        String envCI = System.getenv("CI");
+        System.out.println("🌐 Environment variable CI = " + envCI);
+
+        if ("true".equalsIgnoreCase(envCI)) {
             basePath = System.getProperty("user.dir") + "/tempExcel/";
             System.out.println("📁 [CI] Export path set to: " + basePath);
         } else {
@@ -173,13 +179,14 @@ public class ExcelExporter {
             System.out.println("📁 [LOCAL] Export path set to: " + basePath);
         }
 
+
         File directory = new File(basePath);
         if (!directory.exists()) {
             directory.mkdirs();
             System.out.println("📂 Created directory: " + basePath);
         }
 
-        // 📄 File name
+        // File name
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd_MM_yyyy");
         String fileName;
 
@@ -192,10 +199,10 @@ public class ExcelExporter {
         } else {
             String formattedDate = reportDate.format(formatter);
             String dayOfWeek = reportDate.getDayOfWeek().getDisplayName(java.time.format.TextStyle.FULL, Locale.ENGLISH);
-            fileName = basePath + "AttendanceRecords_" + formattedDate + "_" + dayOfWeek + ".xlsx";
+            fileName = basePath + "AttendanceRecords_" + formattedDate + dayOfWeek + ".xlsx";
         }
 
-        fileName = fileName.replaceAll("[()\\s]", "_"); // Clean file name
+        fileName = fileName.replaceAll("[()\\s]", "_");
         System.out.println("📝 Writing Excel file to: " + fileName);
 
         try (FileOutputStream out = new FileOutputStream(fileName)) {
