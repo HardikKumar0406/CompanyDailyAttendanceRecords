@@ -23,9 +23,6 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Debug QA_USERNAME value
-        run: echo "QA_USERNAME is:$QA_USERNAME"
-
       - name: Build with Maven
         run: mvn clean install
 
