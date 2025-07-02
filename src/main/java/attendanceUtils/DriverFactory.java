@@ -20,7 +20,10 @@ public class DriverFactory {
 
             if (isCI) {
                 options.addArguments("--headless=new");
+                // ✅ Use a unique temporary user data directory to avoid session conflict
+                options.addArguments("--user-data-dir=/tmp/chrome-" + System.currentTimeMillis());
             }
+
 
             options.addArguments("--no-sandbox");
             options.addArguments("--disable-dev-shm-usage");
