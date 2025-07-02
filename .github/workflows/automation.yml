@@ -27,6 +27,14 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+
+      - name: Show CI and workspace paths
+        run: |
+          echo "CI: $CI"
+          echo "Working dir: ${{ github.workspace }}"
+          env | grep CI
+
+
       - name: Set up writable directory for Excel export
         run: |
           mkdir -p ${{ github.workspace }}/tempExcel
