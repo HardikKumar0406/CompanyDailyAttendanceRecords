@@ -8,8 +8,8 @@ import java.util.Properties;
 
 public class EmailSender {
 	public static boolean sendEmailWithAttachment(String toEmail, String ccEmails, String subject, String body, String filePath) {
-	    final String fromEmail = "hardik@peregrine-it.com";
-	    final String password = "tjnq tjeq miap bhsx";
+		final String fromEmail = System.getenv("EMAIL_USERNAME");
+		final String password = System.getenv("EMAIL_PASSWORD");
 
 	    Properties props = new Properties();
 	    props.put("mail.smtp.host", "smtp.gmail.com");
