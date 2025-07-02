@@ -156,6 +156,7 @@ public class AccessControl {
         wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("(//span[@class='path1'])[1]")));
         Thread.sleep(4000);
         clickOnOK.click();
+        Thread.sleep(1000);
         clickOnRefreshIcon.click();
         wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("(//span[@class='path1'])[1]")));
         Thread.sleep(2000);
