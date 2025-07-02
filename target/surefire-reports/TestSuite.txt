@@ -1,8 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: TestSuite
 -------------------------------------------------------------------------------
-Tests run: 2, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 66.526 s <<< FAILURE! - in TestSuite
-testAccessGrantedRecordsRetrieval(attendanceTests.AccessControlTests)  Time elapsed: 58.431 s  <<< FAILURE!
-java.lang.AssertionError: Email was not sent successfully! expected [true] but found [false]
-	at attendanceTests.AccessControlTests.testAccessGrantedRecordsRetrieval(AccessControlTests.java:38)
-
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 68.802 s - in TestSuite

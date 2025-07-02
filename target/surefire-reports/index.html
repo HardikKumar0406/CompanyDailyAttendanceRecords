@@ -25,7 +25,7 @@
       <span class="top-banner-title-font">Test results</span>
       <button id="button" class="button">Switch Retro Theme</button> <!-- button -->
       <br/>
-      <span class="top-banner-font-1">1 suite, 1 failed test</span>
+      <span class="top-banner-font-1">1 suite</span>
     </div> <!-- top-banner-root -->
     <div class="navigator-root">
       <div class="navigator-suite-header">
@@ -39,7 +39,7 @@
         <div class="rounded-window">
           <div class="suite-header light-rounded-window-top">
             <a href="#" panel-name="suite-Surefire_suite" class="navigator-link">
-              <span class="suite-name border-failed">Surefire suite</span>
+              <span class="suite-name border-passed">Surefire suite</span>
             </a> <!-- navigator-link -->
           </div> <!-- suite-header light-rounded-window-top -->
           <div class="navigator-suite-content">
@@ -92,21 +92,7 @@
               <div class="suite-section-content">
                 <ul>
                   <li>
-                    <span class="method-stats">2 methods, 1 failed,   1 passed</span>
-                  </li>
-                  <li>
-                    <span class="method-list-title failed">Failed methods</span>
-                    <span class="show-or-hide-methods failed">
-                      <a href="#" panel-name="suite-Surefire_suite" class="hide-methods failed suite-Surefire_suite"> (hide)</a> <!-- hide-methods failed suite-Surefire_suite -->
-                      <a href="#" panel-name="suite-Surefire_suite" class="show-methods failed suite-Surefire_suite"> (show)</a> <!-- show-methods failed suite-Surefire_suite -->
-                    </span>
-                    <div class="method-list-content failed suite-Surefire_suite">
-                      <span>
-                        <img src="failed.png" width="3%"/>
-                        <a href="#" panel-name="suite-Surefire_suite" title="attendanceTests.AccessControlTests" class="method navigator-link" hash-for-method="testAccessGrantedRecordsRetrieval">testAccessGrantedRecordsRetrieval</a> <!-- method navigator-link -->
-                      </span>
-                      <br/>
-                    </div> <!-- method-list-content failed suite-Surefire_suite -->
+                    <span class="method-stats">2 methods,   2 passed</span>
                   </li>
                   <li>
                     <span class="method-list-title passed">Passed methods</span>
@@ -115,6 +101,11 @@
                       <a href="#" panel-name="suite-Surefire_suite" class="show-methods passed suite-Surefire_suite"> (show)</a> <!-- show-methods passed suite-Surefire_suite -->
                     </span>
                     <div class="method-list-content passed suite-Surefire_suite">
+                      <span>
+                        <img src="passed.png" width="3%"/>
+                        <a href="#" panel-name="suite-Surefire_suite" title="attendanceTests.AccessControlTests" class="method navigator-link" hash-for-method="testAccessGrantedRecordsRetrieval">testAccessGrantedRecordsRetrieval</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
                       <span>
                         <img src="passed.png" width="3%"/>
                         <a href="#" panel-name="suite-Surefire_suite" title="attendanceTests.LoginTests" class="method navigator-link" hash-for-method="verifyAccessControlMenuVisibleAfterLogin">verifyAccessControlMenuVisibleAfterLogin</a> <!-- method navigator-link -->
@@ -132,9 +123,9 @@
     <div class="wrapper">
       <div class="main-panel-root">
         <div panel-name="suite-Surefire_suite" class="panel Surefire_suite">
-          <div class="suite-Surefire_suite-class-failed">
+          <div class="suite-Surefire_suite-class-passed">
             <div class="main-panel-header rounded-window-top">
-              <img src="failed.png"/>
+              <img src="passed.png"/>
               <span class="class-name">attendanceTests.AccessControlTests</span>
             </div> <!-- main-panel-header rounded-window-top -->
             <div class="main-panel-content rounded-window-bottom">
@@ -143,17 +134,12 @@
                   <a name="testAccessGrantedRecordsRetrieval">
                   </a> <!-- testAccessGrantedRecordsRetrieval -->
                   <span class="method-name">testAccessGrantedRecordsRetrieval</span>
-                  <div class="stack-trace">java.lang.AssertionError: Email was not sent successfully! expected [true] but found [false]
-	at attendanceTests.AccessControlTests.testAccessGrantedRecordsRetrieval(AccessControlTests.java:38)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
-... Removed 35 stack frames
-</div> <!-- stack-trace -->
                   <em>
 (Verify user can export attendance record and send it via email)                  </em>
                 </div> <!-- method-content -->
               </div> <!-- method -->
             </div> <!-- main-panel-content rounded-window-bottom -->
-          </div> <!-- suite-Surefire_suite-class-failed -->
+          </div> <!-- suite-Surefire_suite-class-passed -->
           <div class="suite-Surefire_suite-class-passed">
             <div class="main-panel-header rounded-window-top">
               <img src="passed.png"/>
@@ -228,16 +214,16 @@ data.addRows(2);
 data.setCell(0, 0, 0)
 data.setCell(0, 1, 'testAccessGrantedRecordsRetrieval')
 data.setCell(0, 2, 'attendanceTests.AccessControlTests')
-data.setCell(0, 3, 58426);
+data.setCell(0, 3, 63255);
 data.setCell(1, 0, 1)
 data.setCell(1, 1, 'verifyAccessControlMenuVisibleAfterLogin')
 data.setCell(1, 2, 'attendanceTests.LoginTests')
-data.setCell(1, 3, 47);
+data.setCell(1, 3, 28);
 window.suiteTableData['Surefire_suite']= { tableData: data, tableDiv: 'times-div-Surefire_suite'}
 return data;
 }
               </script>
-              <span class="suite-total-time">Total running time: 58 seconds</span>
+              <span class="suite-total-time">Total running time: 1 minutes</span>
               <div id="times-div-Surefire_suite">
               </div> <!-- times-div-Surefire_suite -->
             </div> <!-- times-div -->
@@ -290,24 +276,22 @@ return data;
             <div class="chronological-class">
               <div class="chronological-class-name">attendanceTests.AccessControlTests</div> <!-- chronological-class-name -->
               <div class="test-method">
-                <img src="failed.png">
-                </img>
                 <span class="method-name">testAccessGrantedRecordsRetrieval</span>
-                <span class="method-start">7741 ms</span>
+                <span class="method-start">5216 ms</span>
               </div> <!-- test-method -->
             </div> <!-- chronological-class -->
             <div class="chronological-class">
               <div class="chronological-class-name">attendanceTests.LoginTests</div> <!-- chronological-class-name -->
               <div class="test-method">
                 <span class="method-name">verifyAccessControlMenuVisibleAfterLogin</span>
-                <span class="method-start">66173 ms</span>
+                <span class="method-start">68475 ms</span>
               </div> <!-- test-method -->
             </div> <!-- chronological-class -->
             <div class="chronological-class">
               <div class="chronological-class-name">baseTestFile.BaseTests</div> <!-- chronological-class-name -->
               <div class="configuration-suite after">
                 <span class="method-name">globalTearDown</span>
-                <span class="method-start">66231 ms</span>
+                <span class="method-start">68513 ms</span>
               </div> <!-- configuration-suite after -->
           </div> <!-- main-panel-content rounded-window-bottom -->
         </div> <!-- panel -->
