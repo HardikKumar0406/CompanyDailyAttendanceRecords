@@ -1,5 +1,6 @@
 package attendanceUtils;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -177,8 +178,10 @@ public class ExcelExporter {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd_MM_yyyy");
         String basePath = System.getenv("CI") != null
-        	    ? System.getProperty("java.io.tmpdir") + "/"  // Ensure trailing slash
+        	    ? System.getProperty("user.dir") + "/tempExcel/"
         	    : "/home/peregrine-it/AttendanceExcels/";
+
+        	new File(basePath).mkdirs(); // Create dir if not exists
 
 
 
@@ -193,7 +196,9 @@ public class ExcelExporter {
         } else {
             String formattedDate = reportDate.format(formatter);
             String dayOfWeek = reportDate.getDayOfWeek().getDisplayName(java.time.format.TextStyle.FULL, Locale.ENGLISH);
-            fileName = basePath + "AttendanceRecords_" + formattedDate + " (" + dayOfWeek + ").xlsx";
+            fileName = basePath + ("AttendanceRecords_" + formattedDate + "_" + dayOfWeek + ".xlsx")
+            	    .replaceAll("[()\\s]", "_");
+
         }
 
 
