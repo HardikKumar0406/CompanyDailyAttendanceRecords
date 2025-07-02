@@ -18,6 +18,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Ensure full commit history
 
       - name: Set up Java
         uses: actions/setup-java@v3
@@ -25,8 +27,11 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Build with Maven
-        run: mvn clean install
+      - name: Create writable temp directory for Excel export
+        run: mkdir -p ${{ github.workspace }}/tempExcel
+
+      - name: Clean and compile
+        run: mvn clean compile
 
       - name: Run Selenium Tests
         run: mvn test
