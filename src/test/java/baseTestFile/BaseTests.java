@@ -10,7 +10,7 @@ import attendanceUtils.DriverFactory;
 
 public class BaseTests {
     protected static WebDriver driver;
-    
+
     @BeforeSuite(alwaysRun = true)
     public void globalSetUp() {
         ConfigReader.loadProperties();
@@ -18,26 +18,35 @@ public class BaseTests {
         driver.get(ConfigReader.get("base.url"));
 
         try {
+            // Determine if running in CI
+            boolean isCI = System.getenv("CI") != null;
+
+            String username = isCI
+                ? System.getenv("QA_USERNAME")
+                : ConfigReader.get("username");
+
+            String password = isCI
+                ? System.getenv("QA_PASSWORD")
+                : ConfigReader.get("password");
+
+            if (username == null || password == null) {
+                throw new RuntimeException("Username or password is not set.");
+            }
+
             Login loginPage = new Login(driver);
-     //       loginPage.acceptCookiesIfPresent(); // ✅ Accept cookies FIRST
-            loginPage.performLogin(
-                ConfigReader.get("username"),
-                ConfigReader.get("password")
-            );
+            loginPage.performLogin(username, password);
+
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Login failed: " + e.getMessage());
         }
     }
 
-
     @AfterSuite(alwaysRun = true)
     public void globalTearDown() {
         System.out.println("🔻 @AfterSuite - Closing browser...");
         if (driver != null) {
-            driver.close();
+            driver.quit();
         }
     }
-
-
 }
