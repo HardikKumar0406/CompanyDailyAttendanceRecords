@@ -6,40 +6,28 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-
 
 public class ExcelExporter {
 
-    // Attendance Record POJO
+    // POJO
     public static class AttendanceRecord {
         String firstName;
         String lastName;
         String accessTime;
         String checkType;
 
-       public AttendanceRecord(String firstName, String lastName, String accessTime, String checkType) {
+        public AttendanceRecord(String firstName, String lastName, String accessTime, String checkType) {
             this.firstName = firstName;
             this.lastName = lastName;
             this.accessTime = accessTime;
             this.checkType = checkType;
         }
     }
-    
+
     private LocalDate selectedStartDate;
     private LocalDate selectedEndDate;
 
@@ -47,14 +35,15 @@ public class ExcelExporter {
         this.selectedStartDate = startDate;
         this.selectedEndDate = endDate;
     }
-    
+
     public String writeToExcel(List<AttendanceRecord> records, LocalDate reportDate) {
         Collections.reverse(records);
+
         String[] columns = {"Sr. No.", "First Name", "Last Name", "Access Time", "Check Type", "Attendance Status"};
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Attendance");
 
-        // Fonts & Styles	
+        // Fonts & Styles
         Font defaultFont = workbook.createFont();
         defaultFont.setFontName("Liberation Sans");
         defaultFont.setFontHeightInPoints((short) 10);
@@ -94,7 +83,7 @@ public class ExcelExporter {
         CellStyle orangeStyle = workbook.createCellStyle();
         orangeStyle.setFont(orangeFont);
 
-        // Header
+        // Header Row
         Row headerRow = sheet.createRow(0);
         for (int i = 0; i < columns.length; i++) {
             Cell cell = headerRow.createCell(i);
@@ -109,14 +98,12 @@ public class ExcelExporter {
             Row row = sheet.createRow(rowNum++);
             String userKey = record.firstName + "_" + record.lastName;
 
-            boolean isFirstCheckIn = false;
             String adjustedCheckType = record.checkType;
             String attendanceStatus = "";
 
             if ("Check-In".equalsIgnoreCase(record.checkType)) {
                 if (!seenCheckIns.contains(userKey)) {
                     seenCheckIns.add(userKey);
-                    isFirstCheckIn = true;
                     try {
                         String[] parts = record.accessTime.split(" ");
                         if (parts.length == 2) {
@@ -127,18 +114,18 @@ public class ExcelExporter {
                                 attendanceStatus = "Buffer Late";
                             else
                                 attendanceStatus = "Late";
-                        } else attendanceStatus = "Invalid Time";
+                        } else {
+                            attendanceStatus = "Invalid Time";
+                        }
                     } catch (Exception e) {
                         attendanceStatus = "Invalid Time";
                     }
                 } else {
                     adjustedCheckType = "Break";
                 }
-            } else if ("Check-Out".equalsIgnoreCase(record.checkType)) {
-                // Don't mark it as Break
-                adjustedCheckType = "Check-Out";
             }
 
+            // Fill row data
             row.createCell(0).setCellValue(serial++);
             row.getCell(0).setCellStyle(defaultStyle);
 
@@ -176,15 +163,24 @@ public class ExcelExporter {
             sheet.autoSizeColumn(i);
         }
 
+        // 🔐 Output directory logic
+        String basePath;
+        if (System.getenv("CI") != null) {
+            basePath = System.getProperty("user.dir") + "/tempExcel/";
+            System.out.println("📁 [CI] Export path set to: " + basePath);
+        } else {
+            basePath = "/home/peregrine-it/AttendanceExcels/";
+            System.out.println("📁 [LOCAL] Export path set to: " + basePath);
+        }
+
+        File directory = new File(basePath);
+        if (!directory.exists()) {
+            directory.mkdirs();
+            System.out.println("📂 Created directory: " + basePath);
+        }
+
+        // 📄 File name
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd_MM_yyyy");
-        String basePath = System.getenv("CI") != null
-        	    ? System.getProperty("user.dir") + "/tempExcel/"
-        	    : "/home/peregrine-it/AttendanceExcels/";
-
-        	new File(basePath).mkdirs(); // Create dir if not exists
-
-
-
         String fileName;
 
         if (selectedStartDate != null && selectedEndDate != null && !selectedStartDate.isEqual(selectedEndDate)) {
@@ -192,15 +188,15 @@ public class ExcelExporter {
             String endDateStr = selectedEndDate.format(formatter);
             String startDay = selectedStartDate.getDayOfWeek().getDisplayName(java.time.format.TextStyle.FULL, Locale.ENGLISH);
             String endDay = selectedEndDate.getDayOfWeek().getDisplayName(java.time.format.TextStyle.FULL, Locale.ENGLISH);
-            fileName = basePath + "AttendanceRecords_" + startDateStr + " (" + startDay + ")_to_" + endDateStr + " (" + endDay + ").xlsx";
+            fileName = basePath + "AttendanceRecords_" + startDateStr + "_" + startDay + "_to_" + endDateStr + "_" + endDay + ".xlsx";
         } else {
             String formattedDate = reportDate.format(formatter);
             String dayOfWeek = reportDate.getDayOfWeek().getDisplayName(java.time.format.TextStyle.FULL, Locale.ENGLISH);
-            fileName = basePath + ("AttendanceRecords_" + formattedDate + "_" + dayOfWeek + ".xlsx")
-            	    .replaceAll("[()\\s]", "_");
-
+            fileName = basePath + "AttendanceRecords_" + formattedDate + "_" + dayOfWeek + ".xlsx";
         }
 
+        fileName = fileName.replaceAll("[()\\s]", "_"); // Clean file name
+        System.out.println("📝 Writing Excel file to: " + fileName);
 
         try (FileOutputStream out = new FileOutputStream(fileName)) {
             workbook.write(out);
@@ -217,5 +213,4 @@ public class ExcelExporter {
 
         return fileName;
     }
-
 }
