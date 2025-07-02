@@ -48,6 +48,7 @@ public class Login {
 
     // Perform login and go to Access Control
     public void performLogin(String username, String password) {
+    	System.out.println(driver.getCurrentUrl());
         acceptCookiesIfPresent();
 
         wait.until(ExpectedConditions.visibilityOf(usernameField)).sendKeys(username);

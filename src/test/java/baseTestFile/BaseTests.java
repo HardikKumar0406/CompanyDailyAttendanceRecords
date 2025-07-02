@@ -28,6 +28,11 @@ public class BaseTests {
             String password = isCI
                 ? System.getenv("QA_PASSWORD")
                 : ConfigReader.get("password");
+            
+            System.out.println("CI Mode: " + isCI);
+            System.out.println("Username being used: " + username);
+            // DO NOT log password
+
 
             if (username == null || password == null) {
                 throw new RuntimeException("Username or password is not set.");
