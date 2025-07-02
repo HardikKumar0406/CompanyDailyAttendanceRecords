@@ -192,7 +192,7 @@ public class ExcelExporter {
         } else {
             String formattedDate = reportDate.format(formatter);
             String dayOfWeek = reportDate.getDayOfWeek().getDisplayName(java.time.format.TextStyle.FULL, Locale.ENGLISH);
-            fileName = basePath + "AttendanceRecords_" + formattedDate + "_" + dayOfWeek + ".xlsx";
+            fileName = basePath + "AttendanceRecords_" + formattedDate + dayOfWeek + ".xlsx";
         }
 
         fileName = fileName.replaceAll("[()\\s]", "_"); // Clean file name
