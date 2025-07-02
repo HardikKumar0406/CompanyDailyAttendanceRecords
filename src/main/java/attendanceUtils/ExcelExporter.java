@@ -177,8 +177,9 @@ public class ExcelExporter {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd_MM_yyyy");
         String basePath = System.getenv("CI") != null
-        	    ? System.getProperty("java.io.tmpdir")  // temp directory in GitHub Actions
+        	    ? System.getProperty("java.io.tmpdir") + "/"  // Ensure trailing slash
         	    : "/home/peregrine-it/AttendanceExcels/";
+
 
 
         String fileName;
