@@ -2,14 +2,14 @@ name: Run Selenium Tests Daily
 
 on:
   schedule:
-    - cron: '30 3 * * *'  # Runs every day at 9:00 AM IST (UTC +5:30)
-  workflow_dispatch:       # Allow manual trigger from GitHub UI
+    - cron: '30 3 * * 1-5'  # Runs at 9:00 AM IST, Monday–Friday only
+  workflow_dispatch:        # Optional manual trigger
 
 jobs:
   run-tests:
     runs-on: ubuntu-latest
     env:
-      CI: true             # ✅ This makes System.getenv("CI") return true in Java
+      CI: true
 
     steps:
     - name: Checkout repository
@@ -26,4 +26,3 @@ jobs:
 
     - name: Run Selenium Tests
       run: mvn test
-
