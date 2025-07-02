@@ -167,17 +167,19 @@ public class ExcelExporter {
         }
 
         // Output directory logic
-        String basePath;
         String envCI = System.getenv("CI");
         System.out.println("🌐 Environment variable CI = " + envCI);
+        System.out.println("📁 Working Directory: " + System.getProperty("user.dir"));
 
-        if ("true".equalsIgnoreCase(envCI)) {
+        String basePath;
+        if ("true".equalsIgnoreCase(envCI) || envCI != null) {
             basePath = System.getProperty("user.dir") + "/tempExcel/";
-            System.out.println("📁 [CI] Export path set to: " + basePath);
+            System.out.println("📁 [CI MODE] Export path set to: " + basePath);
         } else {
             basePath = "/home/peregrine-it/AttendanceExcels/";
-            System.out.println("📁 [LOCAL] Export path set to: " + basePath);
+            System.out.println("📁 [LOCAL MODE] Export path set to: " + basePath);
         }
+
 
 
         File directory = new File(basePath);
