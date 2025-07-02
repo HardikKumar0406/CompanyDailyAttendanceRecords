@@ -66,11 +66,11 @@ public class AccessRecordNavigation {
 
     public void navigateToAccessRecordRetrievalPage() throws InterruptedException {
         wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("(//span[@class='path1'])[1]")));
-        Thread.sleep(4000);
+        Thread.sleep(6000);
         clickOnOK.click();
         clickOnRefreshIcon.click();
         wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("(//span[@class='path1'])[1]")));
-        Thread.sleep(2000);
+        Thread.sleep(4000);
 
         wait.until(ExpectedConditions.visibilityOf(clickOnSearch));
         wait.until(ExpectedConditions.elementToBeClickable(clickOnSearch)).click();
@@ -81,7 +81,7 @@ public class AccessRecordNavigation {
 
     public void fetchAttendanceRecord() throws InterruptedException {
         wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("(//span[@class='path1'])[1]")));
-        Thread.sleep(4000);
+        Thread.sleep(5000);
         wait.until(ExpectedConditions.visibilityOf(clickOnMore));
         wait.until(ExpectedConditions.elementToBeClickable(clickOnMore));
         JavascriptExecutor js = (JavascriptExecutor) driver;
