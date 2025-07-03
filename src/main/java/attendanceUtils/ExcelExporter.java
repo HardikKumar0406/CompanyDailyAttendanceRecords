@@ -36,10 +36,7 @@ public class ExcelExporter {
     }
 
     public String writeToExcel(List<AttendanceRecord> records, LocalDate reportDate) {
-        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Kolkata"));
-        System.out.println("\ud83c\udf0f Timezone set to: " + TimeZone.getDefault().getID());
-        System.out.println("\ud83c\udf10 CI Environment? " + System.getenv("CI"));
-        System.out.println("\ud83d\udcc1 Current working directory: " + System.getProperty("user.dir"));
+        System.out.println("🌍 Timezone set to: Asia/Kolkata");
 
         Collections.reverse(records);
 
@@ -110,29 +107,34 @@ public class ExcelExporter {
             String formattedAccessTime = record.accessTime;
 
             try {
+                // Parse input as UTC time
                 LocalDateTime utcDateTime = LocalDateTime.parse(record.accessTime, inputFormatter);
-                ZonedDateTime istZoned = ZonedDateTime.of(utcDateTime, ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("Asia/Kolkata"));
+                ZonedDateTime istZoned = ZonedDateTime.of(utcDateTime, ZoneId.of("UTC"))
+                                                      .withZoneSameInstant(ZoneId.of("Asia/Kolkata"));
                 formattedAccessTime = istZoned.format(outputFormatter);
+                LocalTime istTime = istZoned.toLocalTime();
 
                 if ("Check-In".equalsIgnoreCase(record.checkType)) {
                     if (!seenCheckIns.contains(userKey)) {
                         seenCheckIns.add(userKey);
-                        LocalTime istTime = istZoned.toLocalTime();
 
-                        if (!istTime.isAfter(LocalTime.of(10, 0)))
+                        if (!istTime.isAfter(LocalTime.of(10, 0))) {
                             attendanceStatus = "On-time";
-                        else if (!istTime.isAfter(LocalTime.of(10, 15)))
+                        } else if (!istTime.isAfter(LocalTime.of(10, 15))) {
                             attendanceStatus = "Buffer Late";
-                        else
+                        } else {
                             attendanceStatus = "Late";
+                        }
                     } else {
                         adjustedCheckType = "Break";
                     }
                 }
+
             } catch (Exception e) {
                 attendanceStatus = "Invalid Time";
             }
 
+            // Fill row data
             row.createCell(0).setCellValue(serial++);
             row.getCell(0).setCellStyle(defaultStyle);
 
@@ -170,36 +172,37 @@ public class ExcelExporter {
             sheet.autoSizeColumn(i);
         }
 
+        // Output directory setup
         String envCI = System.getenv("CI");
-        String basePath;
-        if ("true".equalsIgnoreCase(envCI) || envCI != null) {
-            basePath = System.getProperty("user.dir") + "/tempExcel/";
-        } else {
-            basePath = "/home/peregrine-it/AttendanceExcels/";
-        }
+        String basePath = (envCI != null && envCI.equalsIgnoreCase("true"))
+                ? System.getProperty("user.dir") + "/tempExcel/"
+                : "/home/peregrine-it/AttendanceExcels/";
 
         File directory = new File(basePath);
         if (!directory.exists()) directory.mkdirs();
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd_MM_yyyy");
+        // File name logic
+        DateTimeFormatter fileFormatter = DateTimeFormatter.ofPattern("dd_MM_yyyy");
         String fileName;
         if (selectedStartDate != null && selectedEndDate != null && !selectedStartDate.isEqual(selectedEndDate)) {
-            String startDateStr = selectedStartDate.format(formatter);
-            String endDateStr = selectedEndDate.format(formatter);
+            String startDateStr = selectedStartDate.format(fileFormatter);
+            String endDateStr = selectedEndDate.format(fileFormatter);
             String startDay = selectedStartDate.getDayOfWeek().getDisplayName(java.time.format.TextStyle.FULL, Locale.ENGLISH);
             String endDay = selectedEndDate.getDayOfWeek().getDisplayName(java.time.format.TextStyle.FULL, Locale.ENGLISH);
-            fileName = basePath + "AttendanceRecords_" + startDateStr + "_" + startDay + "_to_" + endDateStr + "_" + endDay + ".xlsx";
+            fileName = basePath + "AttendanceRecords_" + startDateStr + "_" + startDay +
+                       "_to_" + endDateStr + "_" + endDay + ".xlsx";
         } else {
-            String formattedDate = reportDate.format(formatter);
+            String formattedDate = reportDate.format(fileFormatter);
             String dayOfWeek = reportDate.getDayOfWeek().getDisplayName(java.time.format.TextStyle.FULL, Locale.ENGLISH);
-            fileName = basePath + "AttendanceRecords_" + formattedDate + dayOfWeek + ".xlsx";
+            fileName = basePath + "AttendanceRecords_" + formattedDate + "_" + dayOfWeek + ".xlsx";
         }
 
         fileName = fileName.replaceAll("[()\\s]", "_");
+
         try (FileOutputStream out = new FileOutputStream(fileName)) {
             workbook.write(out);
         } catch (IOException e) {
-            System.out.println("\u274c Failed to write file: " + e.getMessage());
+            System.out.println("❌ Failed to write file: " + e.getMessage());
         } finally {
             try {
                 workbook.close();
@@ -207,6 +210,7 @@ public class ExcelExporter {
                 e.printStackTrace();
             }
         }
+
         return fileName;
     }
 }
