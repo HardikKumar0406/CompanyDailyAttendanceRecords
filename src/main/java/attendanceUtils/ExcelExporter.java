@@ -35,8 +35,13 @@ public class ExcelExporter {
         this.selectedStartDate = startDate;
         this.selectedEndDate = endDate;
     }
+    
+    
 
     public String writeToExcel(List<AttendanceRecord> records, LocalDate reportDate) {
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Kolkata"));
+        System.out.println("🌏 Timezone set to: " + TimeZone.getDefault().getID());
+    	
     	System.out.println("🌐 CI Environment? " + System.getenv("CI"));
     	System.out.println("📁 Current working directory: " + System.getProperty("user.dir"));
 
