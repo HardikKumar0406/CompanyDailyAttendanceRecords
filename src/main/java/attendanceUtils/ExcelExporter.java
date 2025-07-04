@@ -16,7 +16,7 @@ public class ExcelExporter {
     public static class AttendanceRecord {
         String firstName;
         String lastName;
-        String accessTime; // in UTC
+        String accessTime; // in IST
         String checkType;
 
         public AttendanceRecord(String firstName, String lastName, String accessTime, String checkType) {
@@ -36,8 +36,9 @@ public class ExcelExporter {
     }
 
     public String writeToExcel(List<AttendanceRecord> records, LocalDate reportDate) {
-        System.out.println("🌍 Timezone set to: Asia/Kolkata");
+        System.out.println("📌 Using local IST time directly, no conversion.");
 
+        // Reverse records (Page 11 → Page 1)
         Collections.reverse(records);
 
         String[] columns = {"Sr. No.", "First Name", "Last Name", "Access Time", "Check Type", "Attendance Status"};
@@ -95,8 +96,7 @@ public class ExcelExporter {
         Set<String> seenCheckIns = new HashSet<>();
         int rowNum = 1, serial = 1;
 
-        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 
         for (AttendanceRecord record : records) {
             Row row = sheet.createRow(rowNum++);
@@ -107,12 +107,9 @@ public class ExcelExporter {
             String formattedAccessTime = record.accessTime;
 
             try {
-                // Parse input as UTC time
-                LocalDateTime utcDateTime = LocalDateTime.parse(record.accessTime, inputFormatter);
-                ZonedDateTime istZoned = ZonedDateTime.of(utcDateTime, ZoneId.of("UTC"))
-                                                      .withZoneSameInstant(ZoneId.of("Asia/Kolkata"));
-                formattedAccessTime = istZoned.format(outputFormatter);
-                LocalTime istTime = istZoned.toLocalTime();
+                // Directly parse time assuming it's in IST already
+                LocalDateTime istDateTime = LocalDateTime.parse(record.accessTime, timeFormatter);
+                LocalTime istTime = istDateTime.toLocalTime();
 
                 if ("Check-In".equalsIgnoreCase(record.checkType)) {
                     if (!seenCheckIns.contains(userKey)) {
@@ -144,7 +141,7 @@ public class ExcelExporter {
             row.createCell(2).setCellValue(record.lastName);
             row.getCell(2).setCellStyle(defaultStyle);
 
-            row.createCell(3).setCellValue(formattedAccessTime);
+            row.createCell(3).setCellValue(formattedAccessTime); // Use IST as-is
             row.getCell(3).setCellStyle(defaultStyle);
 
             row.createCell(4).setCellValue(adjustedCheckType);
