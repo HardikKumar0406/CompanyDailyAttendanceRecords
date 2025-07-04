@@ -25,7 +25,7 @@ public class AccessControl {
     }
 
     // WebElements
-    @FindBy(xpath = "(//i[@class='el-submenu__icon-arrow h-icon-angle_down_smg'])[2]")
+    @FindBy(xpath = "(//i[@class='el-submenu__icon-arrow h-icon-angle_down_sm'])[2]")
     private WebElement clickOnSearch;
 
     @FindBy(xpath = "(//span[@id='s_menu_access_personnelsearch'])[1]")
