@@ -41,7 +41,7 @@ jobs:
           echo "✅ tempExcel directory created with full write permission"
 
       - name: Clean and compile project
-        run: mvn clean compile
+        run: ./run-with-retries.sh
 
       - name: Run Selenium Tests
         run: mvn test
