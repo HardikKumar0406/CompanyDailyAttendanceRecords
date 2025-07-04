@@ -14,12 +14,13 @@ jobs:
       QA_PASSWORD: ${{ secrets.QA_PASSWORD }}
       EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
       EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+     
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Ensure full commit history
+          fetch-depth: 0
 
       - name: Set up Java
         uses: actions/setup-java@v3
@@ -27,13 +28,11 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-
       - name: Show CI and workspace paths
         run: |
           echo "CI: $CI"
           echo "Working dir: ${{ github.workspace }}"
           env | grep CI
-
 
       - name: Set up writable directory for Excel export
         run: |
