@@ -2,7 +2,7 @@ name: Run Selenium Tests Daily
 
 on:
   schedule:
-    - cron: '30 2 * * 2-6'  # 8:00 AM IST, Monday–Friday
+    - cron: '30 2 * * 2-6'  # 8:00 AM IST, Tuesday–Saturday
   workflow_dispatch:
 
 jobs:
