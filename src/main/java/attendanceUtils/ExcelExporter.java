@@ -16,7 +16,7 @@ public class ExcelExporter {
     public static class AttendanceRecord {
         String firstName;
         String lastName;
-        String accessTime; // in IST
+        String accessTime; // UTC format
         String checkType;
 
         public AttendanceRecord(String firstName, String lastName, String accessTime, String checkType) {
@@ -36,7 +36,7 @@ public class ExcelExporter {
     }
 
     public String writeToExcel(List<AttendanceRecord> records, LocalDate reportDate) {
-        System.out.println("📌 Using local IST time directly, no conversion.");
+        System.out.println("📌 Converting UTC accessTime to IST before writing to Excel.");
 
         // Reverse records (Page 11 → Page 1)
         Collections.reverse(records);
@@ -104,13 +104,13 @@ public class ExcelExporter {
 
             String adjustedCheckType = record.checkType;
             String attendanceStatus = "";
-            String formattedAccessTime = record.accessTime;
+            String formattedAccessTime = record.accessTime; // fallback if parsing fails
 
             try {
-                // Directly parse time assuming it's in IST already
-            	LocalDateTime utcDateTime = LocalDateTime.parse(record.accessTime, timeFormatter);
-            	ZonedDateTime istDateTime = utcDateTime.atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("Asia/Kolkata"));
-            	LocalTime istTime = istDateTime.toLocalTime();
+                LocalDateTime utcDateTime = LocalDateTime.parse(record.accessTime, timeFormatter);
+                ZonedDateTime istDateTime = utcDateTime.atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("Asia/Kolkata"));
+                LocalTime istTime = istDateTime.toLocalTime();
+                formattedAccessTime = istDateTime.format(timeFormatter); // write IST to Excel
 
                 if ("Check-In".equalsIgnoreCase(record.checkType)) {
                     if (!seenCheckIns.contains(userKey)) {
@@ -127,7 +127,6 @@ public class ExcelExporter {
                         adjustedCheckType = "Break";
                     }
                 }
-
             } catch (Exception e) {
                 attendanceStatus = "Invalid Time";
             }
@@ -142,7 +141,7 @@ public class ExcelExporter {
             row.createCell(2).setCellValue(record.lastName);
             row.getCell(2).setCellStyle(defaultStyle);
 
-            row.createCell(3).setCellValue(formattedAccessTime); // Use IST as-is
+            row.createCell(3).setCellValue(formattedAccessTime); // ✅ now in IST
             row.getCell(3).setCellStyle(defaultStyle);
 
             row.createCell(4).setCellValue(adjustedCheckType);
@@ -188,7 +187,7 @@ public class ExcelExporter {
             String startDay = selectedStartDate.getDayOfWeek().getDisplayName(java.time.format.TextStyle.FULL, Locale.ENGLISH);
             String endDay = selectedEndDate.getDayOfWeek().getDisplayName(java.time.format.TextStyle.FULL, Locale.ENGLISH);
             fileName = basePath + "AttendanceRecords_" + startDateStr + "_" + startDay +
-                       "_to_" + endDateStr + "_" + endDay + ".xlsx";
+                    "_to_" + endDateStr + "_" + endDay + ".xlsx";
         } else {
             String formattedDate = reportDate.format(fileFormatter);
             String dayOfWeek = reportDate.getDayOfWeek().getDisplayName(java.time.format.TextStyle.FULL, Locale.ENGLISH);
