@@ -16,7 +16,7 @@ public class ExcelExporter {
     public static class AttendanceRecord {
         String firstName;
         String lastName;
-        String accessTime; // UTC format
+        String accessTime; // Already in IST
         String checkType;
 
         public AttendanceRecord(String firstName, String lastName, String accessTime, String checkType) {
@@ -36,9 +36,8 @@ public class ExcelExporter {
     }
 
     public String writeToExcel(List<AttendanceRecord> records, LocalDate reportDate) {
-        System.out.println("📌 Converting UTC accessTime to IST before writing to Excel.");
+        System.out.println("📌 Treating accessTime as IST — no conversion applied.");
 
-        // Reverse records (Page 11 → Page 1)
         Collections.reverse(records);
 
         String[] columns = {"Sr. No.", "First Name", "Last Name", "Access Time", "Check Type", "Attendance Status"};
@@ -104,13 +103,13 @@ public class ExcelExporter {
 
             String adjustedCheckType = record.checkType;
             String attendanceStatus = "";
-            String formattedAccessTime = record.accessTime; // fallback if parsing fails
+            String formattedAccessTime = record.accessTime;
 
             try {
-                LocalDateTime utcDateTime = LocalDateTime.parse(record.accessTime, timeFormatter);
-                ZonedDateTime istDateTime = utcDateTime.atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("Asia/Kolkata"));
+                // Parse accessTime directly as IST (no conversion)
+                LocalDateTime istDateTime = LocalDateTime.parse(record.accessTime, timeFormatter);
                 LocalTime istTime = istDateTime.toLocalTime();
-                formattedAccessTime = istDateTime.format(timeFormatter); // write IST to Excel
+                formattedAccessTime = istDateTime.format(timeFormatter); // Ensure consistent formatting
 
                 if ("Check-In".equalsIgnoreCase(record.checkType)) {
                     if (!seenCheckIns.contains(userKey)) {
@@ -131,7 +130,7 @@ public class ExcelExporter {
                 attendanceStatus = "Invalid Time";
             }
 
-            // Fill row data
+            // Fill row
             row.createCell(0).setCellValue(serial++);
             row.getCell(0).setCellStyle(defaultStyle);
 
@@ -141,7 +140,7 @@ public class ExcelExporter {
             row.createCell(2).setCellValue(record.lastName);
             row.getCell(2).setCellStyle(defaultStyle);
 
-            row.createCell(3).setCellValue(formattedAccessTime); // ✅ now in IST
+            row.createCell(3).setCellValue(formattedAccessTime); // Now treated as IST
             row.getCell(3).setCellStyle(defaultStyle);
 
             row.createCell(4).setCellValue(adjustedCheckType);
@@ -169,7 +168,7 @@ public class ExcelExporter {
             sheet.autoSizeColumn(i);
         }
 
-        // Output directory setup
+        // Output directory
         String envCI = System.getenv("CI");
         String basePath = (envCI != null && envCI.equalsIgnoreCase("true"))
                 ? System.getProperty("user.dir") + "/tempExcel/"
