@@ -108,8 +108,9 @@ public class ExcelExporter {
 
             try {
                 // Directly parse time assuming it's in IST already
-                LocalDateTime istDateTime = LocalDateTime.parse(record.accessTime, timeFormatter);
-                LocalTime istTime = istDateTime.toLocalTime();
+            	LocalDateTime utcDateTime = LocalDateTime.parse(record.accessTime, timeFormatter);
+            	ZonedDateTime istDateTime = utcDateTime.atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("Asia/Kolkata"));
+            	LocalTime istTime = istDateTime.toLocalTime();
 
                 if ("Check-In".equalsIgnoreCase(record.checkType)) {
                     if (!seenCheckIns.contains(userKey)) {
