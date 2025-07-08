@@ -3,15 +3,14 @@
 MAX_RETRIES=5
 attempt=1
 
-while [ $attempt -le $MAX_RETRIES ]
-do
+while [ $attempt -le $MAX_RETRIES ]; do
   echo "🔁 Running test suite - Attempt $attempt of $MAX_RETRIES..."
   mvn clean test
   exit_code=$?
 
   if [ $exit_code -eq 0 ]; then
     echo "✅ Test suite passed on attempt $attempt."
-    exit 0
+    exit 0  # ✅ If success, exit immediately — no retry.
   else
     echo "❌ Test suite failed on attempt $attempt."
     ((attempt++))

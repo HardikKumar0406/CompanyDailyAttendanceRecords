@@ -2,7 +2,7 @@ name: Run Selenium Tests Daily
 
 on:
   schedule:
-    - cron: '30 3 * * 1-5'  # 9:00 AM IST, Monday–Friday
+    - cron: '30 2 * * 2-6'  # 8:00 AM IST, Tuesday–Saturday
   workflow_dispatch:
 
 jobs:
@@ -41,7 +41,7 @@ jobs:
           echo "✅ tempExcel directory created with full write permission"
 
       - name: Clean and compile project
-        run: mvn clean compile
+        run: ./run-with-retries.sh
 
       - name: Run Selenium Tests
         run: mvn test
