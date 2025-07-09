@@ -16,7 +16,7 @@ public class ExcelExporter {
     public static class AttendanceRecord {
         String firstName;
         String lastName;
-        String accessTime; // UTC format
+        String accessTime; // UTC
         String checkType;
 
         public AttendanceRecord(String firstName, String lastName, String accessTime, String checkType) {
@@ -35,17 +35,28 @@ public class ExcelExporter {
         this.selectedEndDate = endDate;
     }
 
-    public String writeToExcel(List<AttendanceRecord> records, LocalDate reportDate) {
-        System.out.println("📌 Converting UTC accessTime to IST before writing to Excel.");
+    public static String convertUtcToIst(String utcTimeStr) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+            LocalDateTime utcDateTime = LocalDateTime.parse(utcTimeStr, formatter);
+            ZonedDateTime utcZoned = utcDateTime.atZone(ZoneOffset.UTC);
+            ZonedDateTime istZoned = utcZoned.withZoneSameInstant(ZoneId.of("Asia/Kolkata"));
+            return istZoned.format(formatter);
+        } catch (Exception e) {
+            System.out.println("❌ Failed to convert UTC to IST for: " + utcTimeStr);
+            return utcTimeStr;
+        }
+    }
 
-        // Reverse records (Page 11 → Page 1)
+    public String writeToExcel(List<AttendanceRecord> records, LocalDate reportDate) {
+        System.out.println("📌 Converting accessTime from UTC to IST for reporting.");
+
         Collections.reverse(records);
 
         String[] columns = {"Sr. No.", "First Name", "Last Name", "Access Time", "Check Type", "Attendance Status"};
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Attendance");
 
-        // Fonts & Styles
         Font defaultFont = workbook.createFont();
         defaultFont.setFontName("Liberation Sans");
         defaultFont.setFontHeightInPoints((short) 10);
@@ -85,7 +96,6 @@ public class ExcelExporter {
         CellStyle orangeStyle = workbook.createCellStyle();
         orangeStyle.setFont(orangeFont);
 
-        // Header Row
         Row headerRow = sheet.createRow(0);
         for (int i = 0; i < columns.length; i++) {
             Cell cell = headerRow.createCell(i);
@@ -104,13 +114,12 @@ public class ExcelExporter {
 
             String adjustedCheckType = record.checkType;
             String attendanceStatus = "";
-            String formattedAccessTime = record.accessTime; // fallback if parsing fails
+
+            String formattedAccessTime = convertUtcToIst(record.accessTime);
 
             try {
-                LocalDateTime utcDateTime = LocalDateTime.parse(record.accessTime, timeFormatter);
-                ZonedDateTime istDateTime = utcDateTime.atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("Asia/Kolkata"));
+                LocalDateTime istDateTime = LocalDateTime.parse(formattedAccessTime, timeFormatter);
                 LocalTime istTime = istDateTime.toLocalTime();
-                formattedAccessTime = istDateTime.format(timeFormatter); // write IST to Excel
 
                 if ("Check-In".equalsIgnoreCase(record.checkType)) {
                     if (!seenCheckIns.contains(userKey)) {
@@ -131,7 +140,6 @@ public class ExcelExporter {
                 attendanceStatus = "Invalid Time";
             }
 
-            // Fill row data
             row.createCell(0).setCellValue(serial++);
             row.getCell(0).setCellStyle(defaultStyle);
 
@@ -141,7 +149,7 @@ public class ExcelExporter {
             row.createCell(2).setCellValue(record.lastName);
             row.getCell(2).setCellStyle(defaultStyle);
 
-            row.createCell(3).setCellValue(formattedAccessTime); // ✅ now in IST
+            row.createCell(3).setCellValue(formattedAccessTime);
             row.getCell(3).setCellStyle(defaultStyle);
 
             row.createCell(4).setCellValue(adjustedCheckType);
@@ -169,7 +177,6 @@ public class ExcelExporter {
             sheet.autoSizeColumn(i);
         }
 
-        // Output directory setup
         String envCI = System.getenv("CI");
         String basePath = (envCI != null && envCI.equalsIgnoreCase("true"))
                 ? System.getProperty("user.dir") + "/tempExcel/"
@@ -178,7 +185,6 @@ public class ExcelExporter {
         File directory = new File(basePath);
         if (!directory.exists()) directory.mkdirs();
 
-        // File name logic
         DateTimeFormatter fileFormatter = DateTimeFormatter.ofPattern("dd_MM_yyyy");
         String fileName;
         if (selectedStartDate != null && selectedEndDate != null && !selectedStartDate.isEqual(selectedEndDate)) {
