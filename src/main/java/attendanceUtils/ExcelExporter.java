@@ -16,7 +16,11 @@ public class ExcelExporter {
     public static class AttendanceRecord {
         String firstName;
         String lastName;
+<<<<<<< HEAD
         String accessTime; // UTC
+=======
+        String accessTime; // Already in IST
+>>>>>>> 2555962daba44dfbd19c44a1d264f7d5514fb4e9
         String checkType;
 
         public AttendanceRecord(String firstName, String lastName, String accessTime, String checkType) {
@@ -35,6 +39,7 @@ public class ExcelExporter {
         this.selectedEndDate = endDate;
     }
 
+<<<<<<< HEAD
     public static String convertUtcToIst(String utcTimeStr) {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
@@ -50,6 +55,10 @@ public class ExcelExporter {
 
     public String writeToExcel(List<AttendanceRecord> records, LocalDate reportDate) {
         System.out.println("📌 Converting accessTime from UTC to IST for reporting.");
+=======
+    public String writeToExcel(List<AttendanceRecord> records, LocalDate reportDate) {
+        System.out.println("📌 Treating accessTime as IST — no conversion applied.");
+>>>>>>> 2555962daba44dfbd19c44a1d264f7d5514fb4e9
 
         Collections.reverse(records);
 
@@ -114,12 +123,22 @@ public class ExcelExporter {
 
             String adjustedCheckType = record.checkType;
             String attendanceStatus = "";
+<<<<<<< HEAD
 
             String formattedAccessTime = convertUtcToIst(record.accessTime);
 
             try {
                 LocalDateTime istDateTime = LocalDateTime.parse(formattedAccessTime, timeFormatter);
                 LocalTime istTime = istDateTime.toLocalTime();
+=======
+            String formattedAccessTime = record.accessTime;
+
+            try {
+                // Parse accessTime directly as IST (no conversion)
+                LocalDateTime istDateTime = LocalDateTime.parse(record.accessTime, timeFormatter);
+                LocalTime istTime = istDateTime.toLocalTime();
+                formattedAccessTime = istDateTime.format(timeFormatter); // Ensure consistent formatting
+>>>>>>> 2555962daba44dfbd19c44a1d264f7d5514fb4e9
 
                 if ("Check-In".equalsIgnoreCase(record.checkType)) {
                     if (!seenCheckIns.contains(userKey)) {
@@ -140,6 +159,10 @@ public class ExcelExporter {
                 attendanceStatus = "Invalid Time";
             }
 
+<<<<<<< HEAD
+=======
+            // Fill row
+>>>>>>> 2555962daba44dfbd19c44a1d264f7d5514fb4e9
             row.createCell(0).setCellValue(serial++);
             row.getCell(0).setCellStyle(defaultStyle);
 
@@ -149,7 +172,11 @@ public class ExcelExporter {
             row.createCell(2).setCellValue(record.lastName);
             row.getCell(2).setCellStyle(defaultStyle);
 
+<<<<<<< HEAD
             row.createCell(3).setCellValue(formattedAccessTime);
+=======
+            row.createCell(3).setCellValue(formattedAccessTime); // Now treated as IST
+>>>>>>> 2555962daba44dfbd19c44a1d264f7d5514fb4e9
             row.getCell(3).setCellStyle(defaultStyle);
 
             row.createCell(4).setCellValue(adjustedCheckType);
@@ -177,6 +204,10 @@ public class ExcelExporter {
             sheet.autoSizeColumn(i);
         }
 
+<<<<<<< HEAD
+=======
+        // Output directory
+>>>>>>> 2555962daba44dfbd19c44a1d264f7d5514fb4e9
         String envCI = System.getenv("CI");
         String basePath = (envCI != null && envCI.equalsIgnoreCase("true"))
                 ? System.getProperty("user.dir") + "/tempExcel/"
