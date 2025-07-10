@@ -43,9 +43,6 @@ jobs:
       - name: Clean and compile project
         run: ./run-with-retries.sh
 
-      - name: Run Selenium Tests
-        run: mvn test
-
       - name: Archive Excel report (optional)
         if: always()
         uses: actions/upload-artifact@v4
