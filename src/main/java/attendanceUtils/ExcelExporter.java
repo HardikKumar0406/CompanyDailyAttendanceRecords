@@ -35,18 +35,26 @@ public class ExcelExporter {
         this.selectedEndDate = endDate;
     }
 
-    public static String convertUtcToIst(String utcTimeStr) {
+    public static String convertUtcToIst(String timeStr) {
+        String envCI = System.getenv("CI");
+
+        // If not running in CI, assume time is already in IST
+        if (envCI == null || !envCI.equalsIgnoreCase("true")) {
+            return timeStr;
+        }
+
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-            LocalDateTime utcDateTime = LocalDateTime.parse(utcTimeStr, formatter);
+            LocalDateTime utcDateTime = LocalDateTime.parse(timeStr, formatter);
             ZonedDateTime utcZoned = utcDateTime.atZone(ZoneOffset.UTC);
             ZonedDateTime istZoned = utcZoned.withZoneSameInstant(ZoneId.of("Asia/Kolkata"));
             return istZoned.format(formatter);
         } catch (Exception e) {
-            System.out.println("❌ Failed to convert UTC to IST for: " + utcTimeStr);
-            return utcTimeStr;
+            System.out.println("❌ Failed to convert UTC to IST for: " + timeStr);
+            return timeStr;
         }
     }
+
 
     public String writeToExcel(List<AttendanceRecord> records, LocalDate reportDate) {
         System.out.println("📌 Converting accessTime from UTC to IST for reporting.");
