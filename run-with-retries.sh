@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MAX_RETRIES=5
+MAX_RETRIES=8
 attempt=1
 
 while [ $attempt -le $MAX_RETRIES ]; do
