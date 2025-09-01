@@ -79,10 +79,10 @@ public class AccessControl {
     @FindBy(xpath = "(//button[@type='button'])[68]")
     private WebElement goToPreviousMonth;
     
-    @FindBy(xpath = "(//span[contains(text(),'6')])[2]")
+    @FindBy(xpath = "(//span[@class='cell'][normalize-space()='1'])[1]")
     private WebElement selectStartDate;
     
-    @FindBy(xpath = "(//button[@type='button'])[72]")
+    @FindBy(xpath = "(//span[contains(text(),'31')])[4]")
     private WebElement goToPreviousMonthEndDate;
     
     @FindBy(xpath = "(//span[contains(text(),'6')])[6]")
@@ -121,10 +121,10 @@ public class AccessControl {
         chooseCustomDate.click();
         Thread.sleep(1000);
         chooseDateAgain.click();
-      //  wait.until(ExpectedConditions.visibilityOf(goToPreviousMonth));
-     //   goToPreviousMonth.click();
+        wait.until(ExpectedConditions.visibilityOf(goToPreviousMonth));
+        goToPreviousMonth.click();
         selectStartDate.click();
-    //    goToPreviousMonthEndDate.click(); // commented in your code
+        goToPreviousMonthEndDate.click(); // commented in your code
         selectEndDate.click();
         clickOnOk.click();
 
