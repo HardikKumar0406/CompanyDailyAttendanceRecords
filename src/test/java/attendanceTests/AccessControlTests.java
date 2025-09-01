@@ -16,9 +16,9 @@ public class AccessControlTests extends BaseTests {
 	    AccessControl accesscontrol = new AccessControl(driver);
 	    accesscontrol.navigateToAccessRecordRetrievalPage();
 	  //  accesscontrol.fetchTodaysRecords();
-	    accesscontrol.fetchYesterdayRecords();
+	//    accesscontrol.fetchYesterdayRecords();
 	    // Custom date flow
-	  //  accesscontrol.customedate(); // MUST set selectedReportDate internally
+	    accesscontrol.customedate(); // MUST set selectedReportDate internally
 	    accesscontrol.fetchAttendanceRecord(); // Must work with the selected date
 
 	    String exportedFilePath = accesscontrol.getAllRecord(accesscontrol.selectedReportDate);
