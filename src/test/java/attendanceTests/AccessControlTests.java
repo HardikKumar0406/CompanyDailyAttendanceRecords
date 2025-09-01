@@ -15,10 +15,10 @@ public class AccessControlTests extends BaseTests {
 	public void testAccessGrantedRecordsRetrieval() throws InterruptedException {
 	    AccessControl accesscontrol = new AccessControl(driver);
 	    accesscontrol.navigateToAccessRecordRetrievalPage();
-	  //  accesscontrol.fetchTodaysRecords();
+	    accesscontrol.fetchTodaysRecords();
 	//    accesscontrol.fetchYesterdayRecords();
 	    // Custom date flow
-	    accesscontrol.customedate(); // MUST set selectedReportDate internally
+	   // accesscontrol.customedate(); // MUST set selectedReportDate internally
 	    accesscontrol.fetchAttendanceRecord(); // Must work with the selected date
 
 	    String exportedFilePath = accesscontrol.getAllRecord(accesscontrol.selectedReportDate);
