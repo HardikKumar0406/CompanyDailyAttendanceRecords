@@ -100,6 +100,21 @@ public class AccessControl {
     @FindBy(xpath = "/html/body/div[6]/div[2]/div[1]/span[1]/span[4]")
     private WebElement endDateSpan;
     
+    @FindBy(xpath = "(//span[@class='el-checkbox__inner'])[9]")
+    private WebElement disableSkinSurfaceTemperature;
+    
+    @FindBy(xpath = "(//span[@class='el-checkbox__inner'])[10]")
+    private WebElement disableWearingMaskOrNot;
+    
+    @FindBy(xpath = "(//span[@class='el-checkbox__inner'])[11]")
+    private WebElement disablecardNumber;
+    
+    @FindBy(xpath = "(//span[@class='el-checkbox__inner'])[12]")
+    private WebElement disableDepartment;
+    
+    @FindBy(xpath = "(//span[@class='el-checkbox__inner'])[17]")
+    private WebElement disableAtuthenticationType;
+
     
     public LocalDate selectedReportDate;
 
@@ -190,7 +205,13 @@ public class AccessControl {
         Thread.sleep(5000);
         getFilteredData.click();
         clickOnCheckbox.click();
-        clickOnAttendanceType.click();
+//        Thread.sleep(1000);
+//        clickOnAttendanceType.click();
+        disableSkinSurfaceTemperature.click();
+        disableAtuthenticationType.click();
+        disablecardNumber.click();
+        disableDepartment.click();
+        disableWearingMaskOrNot.click();
         clickOnDrawerIcon.click();
         Thread.sleep(1000);
         clickOnDropDownToChangePagination.click();
@@ -223,10 +244,10 @@ public class AccessControl {
                 List<WebElement> cells = row.findElements(By.cssSelector("td .cell"));
 
                 if (cells.size() >= 8) {
-                    String firstName = cells.get(0).getText().trim();
-                    String lastName = cells.get(1).getText().trim();
-                    String accessTime = cells.get(3).getText().trim();
-                    String checkType = cells.get(7).getText().trim();
+                    String firstName = cells.get(1).getText().trim();
+                    String lastName = cells.get(2).getText().trim();
+                    String accessTime = cells.get(4).getText().trim();
+                    String checkType = cells.get(8).getText().trim();
 
                     System.out.println("------- Row " + index + " Data (Page " + pageNumber + ") -------");
                     System.out.println("First Name : " + firstName);

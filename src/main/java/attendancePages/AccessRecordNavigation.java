@@ -49,7 +49,7 @@ public class AccessRecordNavigation {
     @FindBy(xpath = "(//div[@class='drawer-icon'])[1]")
     private WebElement clickOnDrawerIcon;
 
-    @FindBy(xpath = "(//span[@class='el-checkbox__inner'])[18]")
+    @FindBy(xpath = "//span[@class='el-checkbox__inner']")
     private WebElement clickOnAttendanceType;
 
     @FindBy(xpath = "(//i[@class='el-input__icon h-icon-angle_down_sm'])[5]")
@@ -79,33 +79,33 @@ public class AccessRecordNavigation {
         wait.until(ExpectedConditions.elementToBeClickable(clickOnAccessRecordRetrieval)).click();
     }
 
-    public void fetchAttendanceRecord() throws InterruptedException {
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("(//span[@class='path1'])[1]")));
-        Thread.sleep(5000);
-        wait.until(ExpectedConditions.visibilityOf(clickOnMore));
-        wait.until(ExpectedConditions.elementToBeClickable(clickOnMore));
+    public void fetchAttendanceRecord() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
         JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript("arguments[0].click();", clickOnMore);
-        wait.until(ExpectedConditions.visibilityOf(clickOnChooseAccessStatus));
-        wait.until(ExpectedConditions.elementToBeClickable(clickOnChooseAccessStatus)).click();
 
-        wait.until(ExpectedConditions.visibilityOf(selectAccessGrantedOption));
+        // Wait for loader to disappear
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("(//span[@class='path1'])[1]")));
+
+        // Open filters
+        wait.until(ExpectedConditions.elementToBeClickable(clickOnMore));
+        js.executeScript("arguments[0].click();", clickOnMore);
+
+        wait.until(ExpectedConditions.elementToBeClickable(clickOnChooseAccessStatus)).click();
         wait.until(ExpectedConditions.elementToBeClickable(selectAccessGrantedOption)).click();
 
+        // Search
         wait.until(ExpectedConditions.elementToBeClickable(searchButton)).click();
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("(//span[@class='path1'])[1]")));
-        Thread.sleep(5000);
-        getFilteredData.click();
-        clickOnCheckbox.click();
-        clickOnAttendanceType.click();
-        clickOnDrawerIcon.click();
-        Thread.sleep(1000);
-        clickOnDropDownToChangePagination.click();
-        Thread.sleep(1000);
-        chooseRowTotalToTen.click();
-        Thread.sleep(2000);
+      //  wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("(//span[@class='path1'])[1]")));
+
+        // Select filtered data
+   //     wait.until(ExpectedConditions.elementToBeClickable(getFilteredData)).click();
+        // Drawer & pagination
+    //    wait.until(ExpectedConditions.elementToBeClickable(clickOnDrawerIcon)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(clickOnDropDownToChangePagination)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(chooseRowTotalToTen)).click();
 
         System.out.println("10 Attendance Record Fetched Successfully.");
     }
+
 }
 
