@@ -51,10 +51,14 @@ public class Login {
     	System.out.println(driver.getCurrentUrl());
         acceptCookiesIfPresent();
 
+        System.out.println("Trying to enter username)";
         wait.until(ExpectedConditions.visibilityOf(usernameField)).sendKeys(username);
+        System.out.println("Trying to enter password)";
         wait.until(ExpectedConditions.visibilityOf(passwordField)).sendKeys(password);
+        System.out.println("Trying to click on login)";
         wait.until(ExpectedConditions.elementToBeClickable(loginButton)).click();
 
+        System.out.println("Clicked on login)";
         Thread.sleep(3000);
         wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@id='tab-HCBAccessControl']//span[normalize-space()='Access Control']")));
         wait.until(ExpectedConditions.visibilityOf(accessControlMenu));
