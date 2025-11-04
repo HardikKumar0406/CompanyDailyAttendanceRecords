@@ -55,6 +55,7 @@ public class Login {
         wait.until(ExpectedConditions.visibilityOf(passwordField)).sendKeys(password);
         wait.until(ExpectedConditions.elementToBeClickable(loginButton)).click();
 
+        Thread.sleep(3000);
         wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@id='tab-HCBAccessControl']//span[normalize-space()='Access Control']")));
         wait.until(ExpectedConditions.visibilityOf(accessControlMenu));
         System.out.println("Logged in Successfully. Current URL: " + driver.getCurrentUrl());
