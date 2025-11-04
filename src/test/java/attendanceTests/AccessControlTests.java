@@ -27,8 +27,8 @@ public class AccessControlTests extends BaseTests {
 
 	    boolean emailSent = EmailSender.sendEmailWithAttachment(
 		   // "mukesh@peregrine-it.com",
-		    "lavanya@peregrine-it.com",
-		  //  "hardik040698@gmail.com",
+		    //"lavanya@peregrine-it.com",
+		    "hardik040698@gmail.com",
 		     null,
 	            "Attendance Report",
 	            "Please find the attached attendance report.",
