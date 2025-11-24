@@ -11,7 +11,6 @@ public class DriverFactory {
 
     public static WebDriver initDriver() {
         if (driver == null) {
-
             WebDriverManager.chromedriver().setup();
 
             ChromeOptions options = new ChromeOptions();
@@ -19,21 +18,18 @@ public class DriverFactory {
             boolean isCI = System.getenv("CI") != null;
 
             if (isCI) {
-                System.out.println("CI Mode Detected → Running Chrome in NON-HEADLESS (XVFB) MODE");
+                System.out.println("CI Mode Detected → Running Chrome in HEADLESS MODE");
 
-                // ❌ REMOVE HEADLESS MODE (Hikvision blocks headless)
-                // options.addArguments("--headless=new");
-
-                // 🟦 CI runs inside virtual display → resize only
+                // Headless required for GitHub Actions CI
+                options.addArguments("--headless=new");
                 options.addArguments("--window-size=1920,1080");
 
-                // 🛡 Remove Selenium footprints (anti-bot bypass)
+                // Anti-detection / Selenium footprints
                 options.addArguments("--disable-blink-features=AutomationControlled");
                 options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
                 options.setExperimentalOption("useAutomationExtension", false);
 
             } else {
-                // Local machine → normal visible browser
                 System.out.println("Local Mode → Running Normal Chrome");
             }
 
@@ -48,7 +44,6 @@ public class DriverFactory {
             if (!isCI) {
                 driver.manage().window().maximize();
             }
-
         }
         return driver;
     }
