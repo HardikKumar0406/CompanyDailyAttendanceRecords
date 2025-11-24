@@ -31,7 +31,7 @@ public class Login {
 
     public Login(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(90));
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(60));
         PageFactory.initElements(driver, this);
     }
 
@@ -69,12 +69,12 @@ public class Login {
             e.printStackTrace();
         }
 
+         System.out.println("Logged in Successfully. Current URL: " + driver.getCurrentUrl());
+
         wait.until(ExpectedConditions.presenceOfElementLocated(
                 By.xpath("//div[@id='tab-HCBAccessControl']//span[normalize-space()='Access Control']")));
 
         wait.until(ExpectedConditions.visibilityOf(accessControlMenu));
-
-        System.out.println("Logged in Successfully. Current URL: " + driver.getCurrentUrl());
 
         try {
             wait.until(ExpectedConditions.invisibilityOfElementLocated(
