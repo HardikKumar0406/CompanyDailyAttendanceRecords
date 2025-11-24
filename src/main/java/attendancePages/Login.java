@@ -22,7 +22,6 @@ public class Login {
 
     @FindBy(xpath = "(//input[@placeholder='Password'])[1]")
     private WebElement passwordField;
-    
 
     @FindBy(xpath = "(//span[contains(text(),'Login')])[1]")
     private WebElement loginButton;
@@ -47,33 +46,40 @@ public class Login {
         }
     }
 
+    // Helper to mask password in logs
+    private String maskPassword(String password) {
+        if (password.length() <= 2) {
+            return "**";
+        }
+        int visibleChars = 1;
+        return password.substring(0, visibleChars) + "****";
+    }
+
     // Perform login and go to Access Control
     public void performLogin(String username, String password) {
 
-        System.out.println(driver.getCurrentUrl());
+        System.out.println("Current URL before login: " + driver.getCurrentUrl());
         acceptCookiesIfPresent();
 
         System.out.println("Trying to enter username");
-     //   System.out.println(username);
         wait.until(ExpectedConditions.visibilityOf(usernameField)).sendKeys(username);
+        System.out.println("Username entered: " + username);
 
-    //    system.out.println(password);
-          System.out.println("Trying to enter password");
+        System.out.println("Trying to enter password");
         wait.until(ExpectedConditions.visibilityOf(passwordField)).sendKeys(password);
-
+        System.out.println("Password entered: " + maskPassword(password));
 
         System.out.println("Trying to click on login");
         wait.until(ExpectedConditions.elementToBeClickable(loginButton)).click();
-
         System.out.println("Clicked on login");
 
         try {
-            Thread.sleep(3000);
+            Thread.sleep(3000); // Wait for page load
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-         System.out.println("Logged in Successfully. Current URL: " + driver.getCurrentUrl());
+        System.out.println("Logged in Successfully. Current URL: " + driver.getCurrentUrl());
 
         wait.until(ExpectedConditions.presenceOfElementLocated(
                 By.xpath("//div[@id='tab-HCBAccessControl']//span[normalize-space()='Access Control']")));
