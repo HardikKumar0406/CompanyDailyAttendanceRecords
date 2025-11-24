@@ -10,41 +10,49 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CI: true
+      # For manual debug in CI
       DEBUG_USERNAME: "lavanya@peregrine-it.com"
       DEBUG_PASSWORD: "Hardik@04"
       EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
       EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
 
     steps:
+      # 1️⃣ Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
+      # 2️⃣ Setup Java
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '17'
 
+      # 3️⃣ Install Google Chrome
       - name: Install Google Chrome
         run: |
           sudo apt-get update
-          sudo apt-get install -y wget unzip libxi6 libgconf-2-4
+          sudo apt-get install -y wget unzip libxi6 libxss1 libgdk-pixbuf2.0-0 libnss3 libx11-xcb1
           wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
           sudo dpkg -i google-chrome-stable_current_amd64.deb || sudo apt-get install -f -y
+          google-chrome --version
 
+      # 4️⃣ Show CI environment info
       - name: Show CI and workspace paths
         run: |
           echo "CI: $CI"
           echo "Working dir: ${{ github.workspace }}"
           env | grep CI
 
+      # 5️⃣ Set up writable directory for Excel export
       - name: Set up writable directory for Excel export
         run: |
           mkdir -p ${{ github.workspace }}/tempExcel
           chmod -R 777 ${{ github.workspace }}/tempExcel
           echo "✅ tempExcel directory created with full write permission"
 
-      - name: Clean and compile project
+      # 6️⃣ Clean and compile project, run tests
+      - name: Clean, compile and run tests
         run: ./run-with-retries.sh
