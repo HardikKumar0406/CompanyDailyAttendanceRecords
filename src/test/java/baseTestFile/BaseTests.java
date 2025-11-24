@@ -18,21 +18,20 @@ public class BaseTests {
         driver.get(ConfigReader.get("base.url"));
 
         try {
-            // Determine if running in CI
             boolean isCI = System.getenv("CI") != null;
 
+            // Pass username & password manually in CI if needed
             String username = isCI
-                ? System.getenv("QA_USERNAME")
+                ? System.getenv("DEBUG_USERNAME") // use DEBUG_USERNAME for testing
                 : ConfigReader.get("username");
 
             String password = isCI
-                ? System.getenv("QA_PASSWORD")
+                ? System.getenv("DEBUG_PASSWORD") // use DEBUG_PASSWORD for testing
                 : ConfigReader.get("password");
-            
+
             System.out.println("CI Mode: " + isCI);
             System.out.println("Username being used: " + username);
-            // DO NOT log password
-
+            System.out.println("Password being used: " + password); // Only for debugging
 
             if (username == null || password == null) {
                 throw new RuntimeException("Username or password is not set.");
