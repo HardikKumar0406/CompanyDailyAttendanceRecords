@@ -53,11 +53,11 @@ public class Login {
         acceptCookiesIfPresent();
 
         System.out.println("Trying to enter username");
-        System.out.println(username);
+     //   System.out.println(username);
         wait.until(ExpectedConditions.visibilityOf(usernameField)).sendKeys(username);
 
         system.out.println(password);
-        System.out.println("Trying to enter password");
+  //      System.out.println("Trying to enter password");
         wait.until(ExpectedConditions.visibilityOf(passwordField)).sendKeys(password);
 
         System.out.println("Trying to click on login");
