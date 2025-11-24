@@ -23,7 +23,7 @@ public class Login {
     @FindBy(xpath = "(//input[@placeholder='Password'])[1]")
     private WebElement passwordField;
 
-    @FindBy(xpath = "(//span[contains(text(),'Login')])[1]")
+    @FindBy(xpath = "(//button[@type='submit'])[1]")
     private WebElement loginButton;
 
     @FindBy(xpath = "//div[@id='tab-HCBAccessControl']//span[@title='Access Control'][normalize-space()='Access Control']")
