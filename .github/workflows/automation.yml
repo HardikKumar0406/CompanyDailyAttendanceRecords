@@ -10,57 +10,35 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CI: true
-      QA_USERNAME: ${{ secrets.QA_USERNAME }}
-      QA_PASSWORD: ${{ secrets.QA_PASSWORD }}
+      # For debugging, manually set username/password (non-secret)
+      DEBUG_USERNAME: "lavanya@peregrine-it.com"
+      DEBUG_PASSWORD: "Hardik@04"
       EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
       EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
 
     steps:
-
-      - name: 📥 Checkout repository
+      - name: Checkout repository
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - name: ☕ Set up Java 17
+      - name: Set up Java
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: 🧩 Install Google Chrome
+      - name: Show CI and workspace paths
         run: |
-          sudo apt-get update
-          sudo apt-get install -y wget gnupg2
-          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-          echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
-          sudo apt-get update
-          sudo apt-get install -y google-chrome-stable
+          echo "CI: $CI"
+          echo "Working dir: ${{ github.workspace }}"
+          env | grep CI
 
-      - name: 🖥️ Install Xvfb (Virtual Display for non-headless Chrome)
-        run: |
-          sudo apt-get install -y xvfb
-          echo "Xvfb installed"
-
-      - name: Debug Information
-        run: |
-          google-chrome --version
-          which google-chrome
-          echo "CI Mode: $CI"
-
-      - name: 📁 Create Excel export folder
+      - name: Set up writable directory for Excel export
         run: |
           mkdir -p ${{ github.workspace }}/tempExcel
           chmod -R 777 ${{ github.workspace }}/tempExcel
-          echo "✔ tempExcel directory ready"
+          echo "✅ tempExcel directory created with full write permission"
 
-      - name: 🚀 Run Selenium Tests with Retry (Xvfb wrapper)
-        run: |
-          xvfb-run -a ./run-with-retries.sh
-
-      - name: 📦 Upload Excel Reports
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: Attendance-Excel-Reports
-          path: tempExcel/
+      - name: Clean and compile project
+        run: ./run-with-retries.sh
