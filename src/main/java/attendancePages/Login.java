@@ -49,6 +49,17 @@ public class Login {
     // Perform login and go to Access Control
     public void performLogin(String username, String password) {
 
+        // Fetch username/password from DEBUG env if set
+        String debugUsername = System.getenv("DEBUG_USERNAME");
+        String debugPassword = System.getenv("DEBUG_PASSWORD");
+
+        if (debugUsername != null && !debugUsername.isEmpty()) {
+            username = debugUsername;
+        }
+        if (debugPassword != null && !debugPassword.isEmpty()) {
+            password = debugPassword;
+        }
+
         System.out.println("Current URL before login: " + driver.getCurrentUrl());
         acceptCookiesIfPresent();
 
