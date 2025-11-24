@@ -46,14 +46,6 @@ public class Login {
         }
     }
 
-    // Helper to mask password in logs
-    private String maskPassword(String password) {
-        if (password.length() <= 2) {
-            return "**";
-        }
-        int visibleChars = 1;
-        return password.substring(0, visibleChars) + "****";
-    }
 
     // Perform login and go to Access Control
     public void performLogin(String username, String password) {
