@@ -56,8 +56,8 @@ public class Login {
      //   System.out.println(username);
         wait.until(ExpectedConditions.visibilityOf(usernameField)).sendKeys(username);
 
-        system.out.println(password);
-  //      System.out.println("Trying to enter password");
+    //    system.out.println(password);
+          System.out.println("Trying to enter password");
         wait.until(ExpectedConditions.visibilityOf(passwordField)).sendKeys(password);
 
         System.out.println("Trying to click on login");
