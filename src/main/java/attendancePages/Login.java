@@ -48,23 +48,37 @@ public class Login {
 
     // Perform login and go to Access Control
     public void performLogin(String username, String password) {
-    	System.out.println(driver.getCurrentUrl());
+
+        System.out.println(driver.getCurrentUrl());
         acceptCookiesIfPresent();
 
-        System.out.println("Trying to enter username)";
+        System.out.println("Trying to enter username");
         wait.until(ExpectedConditions.visibilityOf(usernameField)).sendKeys(username);
-        System.out.println("Trying to enter password)";
+
+        System.out.println("Trying to enter password");
         wait.until(ExpectedConditions.visibilityOf(passwordField)).sendKeys(password);
-        System.out.println("Trying to click on login)";
+
+        System.out.println("Trying to click on login");
         wait.until(ExpectedConditions.elementToBeClickable(loginButton)).click();
 
-        System.out.println("Clicked on login)";
-        Thread.sleep(3000);
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@id='tab-HCBAccessControl']//span[normalize-space()='Access Control']")));
-        wait.until(ExpectedConditions.visibilityOf(accessControlMenu));
-        System.out.println("Logged in Successfully. Current URL: " + driver.getCurrentUrl());
+        System.out.println("Clicked on login");
+
         try {
-            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("(//span[@class='path1'])[1]")));
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        wait.until(ExpectedConditions.presenceOfElementLocated(
+                By.xpath("//div[@id='tab-HCBAccessControl']//span[normalize-space()='Access Control']")));
+
+        wait.until(ExpectedConditions.visibilityOf(accessControlMenu));
+
+        System.out.println("Logged in Successfully. Current URL: " + driver.getCurrentUrl());
+
+        try {
+            wait.until(ExpectedConditions.invisibilityOfElementLocated(
+                    By.xpath("(//span[@class='path1'])[1]")));
         } catch (Exception e) {
             System.out.println("Loader not found or already gone.");
         }
@@ -75,4 +89,4 @@ public class Login {
             System.out.println("Access Control menu click failed: " + e.getMessage());
         }
     }
-   }
+}
