@@ -46,7 +46,6 @@ public class Login {
         }
     }
 
-
     // Perform login and go to Access Control
     public void performLogin(String username, String password) {
 
@@ -59,7 +58,7 @@ public class Login {
 
         System.out.println("Trying to enter password");
         wait.until(ExpectedConditions.visibilityOf(passwordField)).sendKeys(password);
-        System.out.println("Password entered: " + maskPassword(password));
+        System.out.println("Password entered: " + password);
 
         System.out.println("Trying to click on login");
         wait.until(ExpectedConditions.elementToBeClickable(loginButton)).click();
