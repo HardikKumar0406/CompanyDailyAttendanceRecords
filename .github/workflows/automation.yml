@@ -10,7 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CI: true
-      # For debugging, manually set username/password (non-secret)
       DEBUG_USERNAME: "lavanya@peregrine-it.com"
       DEBUG_PASSWORD: "Hardik@04"
       EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
@@ -27,6 +26,13 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+
+      - name: Install Google Chrome
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget unzip libxi6 libgconf-2-4
+          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo dpkg -i google-chrome-stable_current_amd64.deb || sudo apt-get install -f -y
 
       - name: Show CI and workspace paths
         run: |
