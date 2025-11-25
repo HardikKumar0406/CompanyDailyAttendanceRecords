@@ -65,22 +65,16 @@ public class Login {
 
         System.out.println("Trying to enter username");
         wait.until(ExpectedConditions.visibilityOf(usernameField)).sendKeys(username);
-        System.out.println("Username entered: " + username);
+      //  System.out.println("Username entered: " + username);
 
         System.out.println("Trying to enter password");
         wait.until(ExpectedConditions.visibilityOf(passwordField)).sendKeys(password);
-        System.out.println("Password entered: " + password);
+ //       System.out.println("Password entered: " + password);
 
         System.out.println("Trying to click on login");
         wait.until(ExpectedConditions.elementToBeClickable(loginButton)).click();
         System.out.println("Clicked on login");
-
-        try {
-            Thread.sleep(3000); // Wait for page load
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
+        Thread.sleep(5000);
         System.out.println("Logged in Successfully. Current URL: " + driver.getCurrentUrl());
 
         wait.until(ExpectedConditions.presenceOfElementLocated(
