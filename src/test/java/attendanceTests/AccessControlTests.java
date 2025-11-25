@@ -26,9 +26,8 @@ public class AccessControlTests extends BaseTests {
 	    Assert.assertTrue(new File(exportedFilePath).exists(), "Exported Excel file does not exist!");
 
 	    boolean emailSent = EmailSender.sendEmailWithAttachment(
-		   // "mukesh@peregrine-it.com",
-		    //"lavanya@peregrine-it.com",
-		    "hardik040698@gmail.com",
+		    "mukesh@peregrine-it.com",
+		   // "hardik040698@gmail.com",
 		     null,
 	            "Attendance Report",
 	            "Please find the attached attendance report.",
